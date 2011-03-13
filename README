@@ -1,0 +1,22 @@
+XMLPATCH - simple non-interactive xml editor
+
+Xmlpatch utilizes Jari Urpalainen's XML Patch library 
+(http://xmlpatch.sourceforge.net/) to perform XML document changes. The changes
+are specified using XML patch file with following structure:
+
+<changes>
+    <change file="PATH/TO/FILE">
+        <add sel="XPATH EXPRESSION">
+            CONTENT_TO_BE_ADDED
+        </add>
+        <replace sel="XPATH EXPRESSION">
+            NEW_CONTENT
+        </add>
+        <remove sel="XPATH EXPRESSION"/>
+    </change>
+</changes>
+
+One change node can contain any number of add, replace and remove nodes and
+changes node can contain any number of change nodes.
+
+See xmlpatch --help for more informations
