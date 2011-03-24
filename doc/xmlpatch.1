@@ -1,0 +1,228 @@
+.de Id
+.ds Dt \\$4
+..
+.ds = \-\^\-
+.de Sp
+.if t .sp .3
+.if n .sp
+..
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH XMLPATCH 1 "March 24, 2011"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+xmlpatch \- Simple utility to change XML files.
+.SH SYNOPSIS
+.B patch
+.RI [ options ]
+.RI [ origfile
+.RI [ patchfile ]]
+.Sp
+but usually just
+.Sp
+.BI "patch \-p" "num"
+.BI < patchfile
+.SH DESCRIPTION
+.B xmlpatch
+takes a patch file
+.I patchfile
+containing a list of changes and applies them on the files specified
+in the
+.I patchfile
+or on the file
+.I origfile
+if it is specified.
+
+Normally the patched versions are put in place of the originals, but backups can be made.
+.SH OPTIONS
+Program accepts following options:
+.TP
+\fB\-b\fP  or  \fB\-\-backup\fP
+Make backup files.  That is, when patching a file, rename or copy the original
+instead of removing it.
+.TP
+\fB\-B\fP \fIpref\fP  or  \fB\-\-prefix=\fP\fIpref\fP
+Append
+.I pref
+to a file name when generating its backup file name.
+For example, with
+.B "\-B\ /junk/"
+the backup file name for
+.B src/patch/util.c
+is
+.BR /junk/src/patch/util.c .
+.TP
+\fB\-d\fP \fIdir\fP  or  \fB\-\-directory=\fP\fIdir\fP
+Change to the directory
+.I dir
+immediately, before doing anything else.
+.TP
+\fB\-h\fP  or  \fB\-\-help\fP
+Print a summary of options and exit.
+.TP
+\fB\-i\fP \fIpatchfile\fP  or  \fB\-\-input=\fP\fIpatchfile\fP
+Read the patch from
+.IR patchfile .
+If
+.I patchfile
+is
+.BR \- ,
+read from standard input, the default.
+.TP
+\fB\-o\fP \fIoutfile\fP  or  \fB\-\-output=\fP\fIoutfile\fP
+Send output to
+.I outfile
+instead of patching files in place.
+.TP
+\fB\-p\fP\fInum\fP  or  \fB\-\-strip\fP\fB=\fP\fInum\fP
+Strip the smallest prefix containing
+.I num
+leading slashes from each file name found in the patch file.
+A sequence of one or more adjacent slashes is counted as a single slash.
+This controls how file names found in the patch file are treated, in case
+you keep your files in a different directory than the person who sent
+out the patch.
+For example, supposing the file name in the patch file was
+.Sp 
+    \fB/u/howard/src/blurfl/blurfl.xml\fP
+.Sp
+setting
+.B \-p0
+gives the entire file name unmodified,
+.B \-p1
+gives
+.Sp
+        \fBu/howard/src/blurfl/blurfl.xml\fP
+.Sp
+without the leading slash,
+.B \-p4
+gives
+.Sp
+        \fBblurfl/blurfl.xml\fP
+.Sp
+and not specifying
+.B \-p
+at all just gives you \fBblurfl.xml\fP.
+Whatever you end up with is looked for either in the current directory,
+or the directory specified by the
+.B \-d
+option.
+.TP
+\fB\-r\fP \fIrejectfile\fP  or  \fB\-\-reject\-file=\fP\fIrejectfile\fP
+Put rejects into
+.I rejectfile
+instead of the default
+.B \&.rej
+file.  When \fIrejectfile\fP is \fB\-\fP, discard rejects.
+.TP
+\fB\-s\fP  or  \fB\-\-silent\fP  or  \fB\-\-quiet\fP
+Work silently, unless an error occurs.
+.TP
+\fB\-v\fP  or  \fB\-\-version\fP
+Print out
+.BR xmlpatch 's
+version and exit.
+.TP
+\fB\-x\fP  or  \fB\-\-expand\fP
+Expand environment variables found in patch file before doing anything else.
+Variable identificators can be specified as
+.BR $VARIABLE_NAME .
+.TP
+\fB\-Y\fP \fIpref\fP  or  \fB\-\-basename\-prefix=\fP\fIpref\fP
+Prefix
+.I pref
+to the basename of a file name when generating its backup file name.
+For example, with
+.B "\-Y\ .del/"
+the backup file name for
+.B src/patch/util.xml
+is
+.BR src/patch/.del/util.xml .
+.TP
+\fB\-z\fP \fIsuffix\fP  or  \fB\*=suffix=\fP\fIsuffix\fP
+Use
+.I suffix
+as the suffix.
+For example, with
+.B "\-z\ -"
+the backup file name for
+.B src/patch/util.xml
+is
+.BR src/patch/util.xml- .
+.SH PATCH FILE FORMAT
+.nf
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<changes>
+    <change file="filename">
+        <add sel="xpath expression">
+            CONTENT_TO_BE_ADDED
+        </add>
+        <replace sel="xpath expression">
+            NEW_CONTENT
+        </add>
+        <remove sel="xpath expression"/>
+    </change>
+</changes>
+.fi
+.TP
+\fB<changes>\fP node
+This node is used to group one or more
+.B <change>
+node. If there is only one
+.B <change>
+node, then usage of 
+.B <changes>
+node is optional.
+.TP
+\fB\<change file="\fP\fIfilename\fP\fB">\fP node
+This node is used to group operations performed on one file specified by 
+.B file
+attribute. The 
+.I filename
+is modified according to
+.B -p
+option and can be overrided by specifying 
+.I origfile
+on commandline. 
+In that case the attribute is optional.
+
+This node can contain any number of
+.BR <add> ,
+.B <replace> 
+and
+.B <remove>
+nodes.
+.TP
+\fB\<add sel="\fP\fIxpath expression\fP\fB">\fP node
+Add content of this node to the place specified by
+.I xpath 
+.IR expression .
+.TP
+\fB\<replace sel="\fP\fIxpath expression\fP\fB">\fP node
+Replace node specified by
+.I xpath 
+.IR expression .
+with content of this node.
+.TP
+\fB\<remove sel="\fP\fIxpath expression\fP\fB">\fP node
+Delete node (and all its children) specified by
+.I xpath 
+.IR expression .
+.SH SEE ALSO
+.BR patch (1).
+.br
+.SH AUTHOR
+xmlpatch and this manual page was written by Petr Malat <oss@malat.biz>. 
+The manual page is heavily based on patch(1) manual page.
