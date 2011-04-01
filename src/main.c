@@ -135,7 +135,7 @@ static void file_backup(char *filename)
 	buf_append(backup_file, "\0", 1);
 
 	/* Make directory */
-	for (slash = index(buf_data(backup_file), '/'); slash; slash = index(slash + 1, '/')) {
+	for (slash = index(buf_data(backup_file) + 1, '/'); slash; slash = index(slash + 1, '/')) {
 		struct stat statbuf;
 		*slash = 0;
 
