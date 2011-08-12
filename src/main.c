@@ -47,6 +47,7 @@ static struct patch_settings_s {
 	bool quiet;
 	bool expand;
 	bool backup;
+	bool keep_blank;
 	int patch_fd;
 	char *file;
 	char *prefix;
@@ -59,6 +60,7 @@ static struct patch_settings_s {
 	.quiet = false,
 	.expand = false,
 	.backup = false,
+	.keep_blank = false,
 	.patch_fd = -1,
 	.file = NULL,
 	.prefix = "",
@@ -74,6 +76,7 @@ static void usage()
 		"Input options:\n\n"
 		"  -p NUM  --strip=NUM  Strip NUM leading components from file names.\n"
 		"  -x  --expand  Expand environment variables found in patch file.\n"
+		"  -k  --keep-blank  Do not ignore text nodes containing only whitespaces.\n"
 		"  -i PATCHFILE  --input=PATCHFILE  Read patch from PATCHFILE instead of stdin.\n\n"
 		"Output options:\n\n"
 		"  -o FILE  --output=FILE  Output patched files to FILE.\n"
@@ -310,6 +313,21 @@ static xmlDocPtr read_patch(int fd)
 	return doc;
 }
 
+/** Recursively unlink blank nodes */
+void strip_blank_nodes(xmlNodePtr node)
+{
+	while (node) {
+		xmlNodePtr next = node->next;
+		if (xmlIsBlankNode(node)) {
+			xmlUnlinkNode(node);
+			xmlFree(node);
+		} else if (node->type == XML_ELEMENT_NODE) {
+			strip_blank_nodes(node->children);
+		}
+		node = next;
+	}
+}
+
 /*
  * Reject generation
  */
@@ -457,6 +475,10 @@ static int patch(void)
 
 	/* Apply patch */
 	node = xmlDocGetRootElement(patch_doc);
+	if (!settings.keep_blank) {
+		strip_blank_nodes(node);
+	}
+
 	if (strcmp((const char*)node->name, "change") == 0) {
 		rc = handle_change_node(node, patch_doc);
 	} else if (strcmp((const char*)node->name, "changes") == 0) {
@@ -494,6 +516,7 @@ int main(int argc, char *argv[])
 			{"strip", 1, 0, 'p'},
 			{"reject-file", 1, 0, 'r'},
 			{"silent", 0, 0, 's'},
+			{"keep-blank", 0, 0, 'k'},
 			{"quiet", 0, 0, 's'},
 			{"version", 0, 0, 'v'},
 			{"backup", 0, 0, 'b'},
@@ -505,7 +528,7 @@ int main(int argc, char *argv[])
 			{0, 0, 0, 0}
 		};
 
-		c = getopt_long(argc, argv, "d:i:o:p:r:svbB:Y:z:xh",
+		c = getopt_long(argc, argv, "d:i:o:p:r:svkbB:Y:z:xh",
 				long_options, &option_index);
 		if (c == -1)
 			break;
@@ -562,6 +585,10 @@ int main(int argc, char *argv[])
 
 			case 'b': // backup
 				settings.backup = true;
+				break; 
+
+			case 'k': // keep-blank
+				settings.keep_blank = true;
 				break; 
 
 			case 'B': // prefix
