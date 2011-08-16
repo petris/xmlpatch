@@ -1,6 +1,6 @@
 PREFIX ?= /usr/local/
 
-.PHONY: all check_libxmlpatch check_libxml check_pkgconfig install
+.PHONY: all check_libxmlpatch check_libxml check_pkgconfig install test
 
 all: check_libxmlpatch check_libxml
 	$(MAKE) -C src
@@ -15,6 +15,9 @@ check_libxmlpatch: check_pkgconfig
 check_pkgconfig:
 	@which pkg-config || (echo 'ERROR: pkg-config is not installed' && false)
 
-install: all
+test: all
+	@cd t && ./test.sh
+
+install: all test
 	install -D -t $(PREFIX)/bin -o root -g root -m 0755 src/xmlpatch 
 	install -D -t $(PREFIX)/share/man/man1 -o root -g root -m 0644 doc/xmlpatch.1.gz
