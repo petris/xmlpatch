@@ -1,0 +1,5 @@
+Adding before the first child
+
+If the "pos" attribute of a <add> node is set to "prepend", the content of the
+<add> node is inserted before the first child of the node selected using the 
+"pos" attribute.

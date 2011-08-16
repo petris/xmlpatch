@@ -1,0 +1,4 @@
+Adding after the node
+
+If the "pos" attribute of a <add> node is set to "after", the content of the
+<add> node is added after the node selected using the "pos" attribute.

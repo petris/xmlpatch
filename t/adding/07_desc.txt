@@ -1,0 +1,5 @@
+Adding into multiple locations
+
+Normaly, only one node can match xpath expresion specified in "sel" attribute.
+If the operation shall be performed on more nodes, "msel" attribute must be 
+used.

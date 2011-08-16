@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<changes>
+	<change>
+		<add sel="//inner[@name='second']">
+			<new>1 st</new>
+			<new>2 nd</new>
+		</add>
+	</change>
+</changes>

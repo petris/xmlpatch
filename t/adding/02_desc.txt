@@ -1,0 +1,4 @@
+Adding after the last child
+
+If the "pos" attribute of a <add> node is set to "to", the content of the <add>
+node is added after the last child of the node selected using the "pos" attribute.

@@ -1,0 +1,4 @@
+Adding attribute
+
+Attribute node is added using the "type" attribute of <add> node, which contains
+@ followed by the new attribute name.

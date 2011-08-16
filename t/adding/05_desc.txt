@@ -1,0 +1,4 @@
+Adding before the node
+
+If the "pos" attribute of a <add> node is set to "before", the content of the
+<add> node is added before the node selected using the "pos" attribute.

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<root>
+	<outer>
+		<inner name="first"/>
+		<inner name="second" attr="Say &quot;Hallo&quot;">
+			<leaf/>
+		</inner>
+		<inner name="third"/>
+	</outer>
+</root>

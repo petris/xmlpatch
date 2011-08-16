@@ -1,0 +1,4 @@
+Default adding
+
+By default, <add> node content is added after the last child of the node 
+specified in the "pos" attribute.
