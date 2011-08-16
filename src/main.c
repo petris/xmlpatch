@@ -283,7 +283,7 @@ static xmlDocPtr read_patch(int fd)
 							if (roffset) {
 								error(EXIT_FAILURE, errno, 
 									"**** Too long (> %luB) identifier found",
-								    	sizeof rbuf);
+								    	(long unsigned)sizeof rbuf);
 							}
 							memmove(rbuf, vbuf, rbuf + rd - vbuf);
 							roffset = rbuf + rd - vbuf;
@@ -633,7 +633,7 @@ int main(int argc, char *argv[])
 				break;
 
 			case 'v': // version
-				fprintf(stderr, "Version: 0.1\n");
+				fprintf(stderr, "Version: 0.2\n");
 				return 0;
 
 			case 'b': // backup
