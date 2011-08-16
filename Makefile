@@ -1,10 +1,12 @@
 PREFIX ?= /usr/local/
 
-.PHONY: all check_libxmlpatch check_libxml check_pkgconfig install test
+.PHONY: doc check_libxmlpatch check_libxml check_pkgconfig install test
 
-all: check_libxmlpatch check_libxml
-	$(MAKE) -C src
+doc: compile
 	$(MAKE) -C doc
+
+compile: check_libxmlpatch check_libxml
+	$(MAKE) -C src
 
 check_libxml: check_pkgconfig
 	@pkg-config --exists libxml-2.0 || (echo 'ERROR: libxml-2.0 is not installed' && false)
