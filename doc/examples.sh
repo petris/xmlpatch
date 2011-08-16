@@ -94,3 +94,5 @@ function add_dir () {
 
 prepare
 add_dir ../t/adding
+add_dir ../t/removing
+add_dir ../t/replacing

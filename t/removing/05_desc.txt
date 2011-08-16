@@ -1,0 +1,3 @@
+Remove an attribute
+
+Attribute is selected using "@" before its name in the XPath expression.

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<root>
+	<outer>
+		<inner name="first"/>
+		<new>1 st</new>
+		<inner name="third">
+			Some text
+		</inner>
+	</outer>
+</root>

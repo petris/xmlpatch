@@ -1,0 +1,4 @@
+Replacing an attribute value
+
+Change value of attribute. Note how the replace node is split on two lines to
+maintain indentation and don't polute the attribute value with unwanted spaces.

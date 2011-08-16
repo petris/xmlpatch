@@ -1,0 +1,4 @@
+Replacing a text node
+
+Replace text node with another. Note that whitespaces are preserved, so if the
+output shall be alligned, there must be the right number of whitespaces.

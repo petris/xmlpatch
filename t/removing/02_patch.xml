@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<changes>
+	<change>
+		<remove sel="//inner[@name='second']" 
+		        ws="both"/>
+	</change>
+</changes>

@@ -1,0 +1,4 @@
+Replacing a node
+
+Replace one node with another. Note that one node can be replaced by only one 
+node, so specifiing more nodes inside of <replace> node will always fail.

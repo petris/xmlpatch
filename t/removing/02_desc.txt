@@ -1,0 +1,6 @@
+Remove a node and all surrounding blank nodes
+
+The "ws" attribute can be used to remove also the surrounding blank nodes.
+Possible values for that attribute are "both" to remove all surrounding
+blank nodes, "before" to remove preceding blank node or "after" to remove
+following blank node.

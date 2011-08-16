@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<changes>
+	<change>
+		<replace sel="//inner[@name='first']/@name"
+		>realy first</replace>
+	</change>
+</changes>

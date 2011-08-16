@@ -19,4 +19,5 @@ are specified using XML patch file with following structure:
 One change node can contain any number of add, replace and remove nodes and
 changes node can contain any number of change nodes.
 
-See xmlpatch --help for more informations
+See xmlpatch --help for more informations or run make doc and then check out
+doc/examples.html for examples.

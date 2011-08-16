@@ -1,0 +1,4 @@
+Remove a node and preceding blank node
+
+To maintain indentation, it is sufficient to remove blank node at only one side
+of removed node.

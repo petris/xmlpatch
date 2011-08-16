@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<changes>
+	<change>
+		<replace sel="//inner[@name='second']">
+			<new>1 st</new>
+		</replace>
+	</change>
+</changes>

@@ -1,0 +1,3 @@
+Remove a text node
+
+To remove text node, XPath "text()" function must be used.

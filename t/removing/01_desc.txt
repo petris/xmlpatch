@@ -1,0 +1,3 @@
+Remove a node (and all its children)
+
+The node is deleted with all its children nodes.

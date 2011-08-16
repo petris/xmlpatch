@@ -1,0 +1,5 @@
+Removing all children of node
+
+To remove more then one node, "msel" attribute must be used instead of "sel".
+Note that expresion "//outer/*" will not work, as it does not remove the text 
+nodes containing white characters used for indentation.
