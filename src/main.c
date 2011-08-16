@@ -350,7 +350,7 @@ static void reject_handle(reject_t *reject, char *file, xmlNodePtr node)
 
 static void reject_finalize(reject_t *reject, char *file)
 {
-	if (reject) {
+	if (*reject) {
 		xmlNodePtr rejected_node = xmlCopyNode(*reject, 1);
 		if (settings.reject == REJ_LOCAL) {
 			xmlDocPtr doc;
