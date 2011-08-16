@@ -17,9 +17,9 @@ check_libxmlpatch: check_pkgconfig
 check_pkgconfig:
 	@which pkg-config || (echo 'ERROR: pkg-config is not installed' && false)
 
-test: all
+test: compile
 	@cd t && ./test.sh
 
-install: all test
+install: compile doc test
 	install -D -t $(PREFIX)/bin -o root -g root -m 0755 src/xmlpatch 
 	install -D -t $(PREFIX)/share/man/man1 -o root -g root -m 0644 doc/xmlpatch.1.gz
