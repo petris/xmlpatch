@@ -55,6 +55,7 @@ static struct patch_settings_s {
 	char *basename_prefix;
 	enum { REJ_NONE, REJ_LOCAL, REJ_GLOBAL } reject;
 	xmlNodePtr reject_root;
+	xmlOutputBufferPtr output;
 } settings = {
 	.strip = -1,
 	.quiet = false,
@@ -68,6 +69,7 @@ static struct patch_settings_s {
 	.basename_prefix = "",
 	.reject = REJ_LOCAL,
 	.reject_root = NULL,
+	.output = NULL,
 };
 
 static void usage()
@@ -314,7 +316,7 @@ static xmlDocPtr read_patch(int fd)
 }
 
 /** Recursively unlink blank nodes */
-void strip_blank_nodes(xmlNodePtr node)
+static void strip_blank_nodes(xmlNodePtr node)
 {
 	while (node) {
 		xmlNodePtr next = node->next;
@@ -380,6 +382,45 @@ static void reject_finalize(reject_t *reject, char *file)
 /*
  * Patching
  */
+struct output_context_s {
+	int last_char;
+	FILE *file;
+};
+
+static int output_write(void * context, const char * buffer, int len)
+{
+	struct output_context_s *ctx = context;
+
+	ctx->last_char = buffer[len - 1];
+	return fwrite(buffer, len, 1, ctx->file);
+}
+
+static int output_finalize(void * context)
+{
+	struct output_context_s *ctx = context;
+
+	if (ctx->last_char == '\n') {
+		return 0;
+	} else {
+		return fputc('\n', ctx->file);
+	}
+}
+
+/** Output appender - used to output multiple XMLs into one file */
+static xmlOutputBufferPtr xmlOutputAppend(FILE *file, xmlCharEncodingHandlerPtr encoder)
+{
+	xmlOutputBufferPtr ret;
+	static struct output_context_s context;
+
+	ret = xmlAllocOutputBuffer(encoder);
+	if (ret != NULL) {
+		context.file = file;
+		ret->context = &context;
+		ret->writecallback = output_write;
+		ret->closecallback = output_finalize;
+	}
+	return ret;
+}
 
 /** Apply the single change */
 static int xmldoc_change(xmlDocPtr doc, xmlNodePtr node)
@@ -444,10 +485,14 @@ static int handle_change_node(xmlNodePtr node, xmlDocPtr patch_doc)
 	}
 
 	/* Write patched file */
-	if (settings.backup) {
-		file_backup(file);
+	if (settings.output == NULL) {
+		if (settings.backup) {
+			file_backup(file);
+		}
+		xmlSaveFile(file, doc);
+	} else {
+		xmlSaveFileTo(settings.output, doc, NULL);
 	}
-	xmlSaveFile(file, doc);
 	xmlFreeDoc(doc);
 
 	reject_finalize(&reject, file);
@@ -552,7 +597,15 @@ int main(int argc, char *argv[])
 				break;
 
 			case 'o': // output
-				error(EXIT_FAILURE, 0, "**** Unimplemented");
+				if (strcmp("-", optarg) == 0) {
+					settings.output = xmlOutputAppend(stdout, NULL);
+				} else {
+					FILE *output = fopen(optarg, "w");
+					if (output == NULL) {
+						error(EXIT_FAILURE, errno, "**** Can't open output file %s", optarg);
+					}
+					settings.output = xmlOutputAppend(output, NULL);
+				}
 				break;
 
 			case 'p': // strip
@@ -627,7 +680,7 @@ int main(int argc, char *argv[])
 
 		settings.patch_fd = open(argv[optind], O_RDONLY);
 		if (settings.patch_fd < 0) {
-			error(EXIT_FAILURE, errno, "**** Can't open patch file %s", optarg);
+			error(EXIT_FAILURE, errno, "**** Can't open patch file %s", argv[optind]);
 		}
 		optind++;
 	}
@@ -635,7 +688,7 @@ int main(int argc, char *argv[])
 	if (settings.patch_fd == -1) {
 		settings.patch_fd = dup(0);
 		if (settings.patch_fd == -1) {
-			error(EXIT_FAILURE, errno, "**** Can't open patch file %s", optarg);
+			error(EXIT_FAILURE, errno, "**** Can't read patch file from stdin");
 		}
 	}
 
