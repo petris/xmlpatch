@@ -25,14 +25,14 @@
 .SH NAME
 xmlpatch \- Simple utility to change XML files.
 .SH SYNOPSIS
-.B patch
+.B xmlpatch
 .RI [ options ]
 .RI [ origfile
 .RI [ patchfile ]]
 .Sp
 but usually just
 .Sp
-.BI "patch \-p" "num"
+.BI "xmlpatch \-p" "num"
 .BI < patchfile
 .SH DESCRIPTION
 .B xmlpatch
@@ -224,8 +224,14 @@ Delete node (and all its children) specified by
 .I xpath 
 .IR expression .
 .SH SEE ALSO
-.BR patch (1).
+.BR patch (1),
+.BR libxml (3).
+
+.B RFC 5261 
+(http://tools.ietf.org/html/rfc5261).
 .br
 .SH AUTHOR
 xmlpatch and this manual page was written by Petr Malat <oss@malat.biz>. 
-The manual page is heavily based on patch(1) manual page.
+The manual page is heavily based on patch(1) manual page. All the xml 
+handling is done using Daniel Veillard's libxml and the patching is 
+done using Jari Urpalainen's libxmlpatch.
