@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+[ -f test.xml.rej ] && rm test.xml.rej
+cp orig.xml test.xml
+$XMLPATCH -s < 01_patch.xml
+
+diff test.xml 01_result.xml > /dev/null || exit 1
+[ ! -f test.xml.rej ]

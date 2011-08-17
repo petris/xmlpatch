@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+[ -d 03 ] && rm -rf 03
+mkdir -p "03/path/"
+cp orig.xml "03/path/test.xml"
+$XMLPATCH -s -p2 < 03_patch.xml
+
+diff "03/path/test.xml" 03_result.xml > /dev/null || exit 1
+[ ! -f "03/path/test.xml.rej" ]

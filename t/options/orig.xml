@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<root>
+	<outer>
+		<inner name="first"/>
+		<inner name="second"/>
+		<inner name="third"/>
+	</outer>
+</root>

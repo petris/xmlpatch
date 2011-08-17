@@ -1,0 +1,3 @@
+Run with -p0
+
+If -p0 is specified, the whole path shall be used as the patched file location.
