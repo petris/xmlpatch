@@ -55,7 +55,7 @@ static struct patch_settings_s {
 	char *basename_prefix;
 	enum { REJ_NONE, REJ_LOCAL, REJ_GLOBAL } reject;
 	xmlNodePtr reject_root;
-	xmlOutputBufferPtr output;
+	FILE *output;
 } settings = {
 	.strip = -1,
 	.quiet = false,
@@ -457,7 +457,7 @@ static int handle_change_node(xmlNodePtr node, xmlDocPtr patch_doc)
 
 	doc = xmlParseFile(file);
 	if (doc == NULL) {
-		xmlFree(file);
+		xmlFree(xmlfile);
 		return ERROR_INVALID_FILE;
 	}
 
@@ -491,7 +491,7 @@ static int handle_change_node(xmlNodePtr node, xmlDocPtr patch_doc)
 		}
 		xmlSaveFile(file, doc);
 	} else {
-		xmlSaveFileTo(settings.output, doc, NULL);
+		xmlSaveFileTo(xmlOutputAppend(settings.output, NULL), doc, NULL);
 	}
 	xmlFreeDoc(doc);
 
@@ -598,13 +598,12 @@ int main(int argc, char *argv[])
 
 			case 'o': // output
 				if (strcmp("-", optarg) == 0) {
-					settings.output = xmlOutputAppend(stdout, NULL);
+					settings.output = stdout;
 				} else {
-					FILE *output = fopen(optarg, "w");
-					if (output == NULL) {
+					settings.output = fopen(optarg, "w");
+					if (settings.output == NULL) {
 						error(EXIT_FAILURE, errno, "**** Can't open output file %s", optarg);
 					}
-					settings.output = xmlOutputAppend(output, NULL);
 				}
 				break;
 
