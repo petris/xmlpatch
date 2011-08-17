@@ -470,8 +470,22 @@ static int handle_change_node(xmlNodePtr node, xmlDocPtr patch_doc)
 	for (node = node->children; node; node = node->next, i++) {
 		if (node->type == XML_ELEMENT_NODE) {
 			if (!settings.quiet) {
-				fprintf(stderr, "Applying %d - %s", i, node->name);
+				xmlChar *empty = (xmlChar*)"";
+				xmlChar *xpath = xmlGetProp(node, (const xmlChar*)"sel");
+
+				if (xpath == NULL) {
+					xpath = xmlGetProp(node, (const xmlChar*)"msel");
+				}
+				if (xpath == NULL) {
+					xpath = empty;
+				}
+
+				fprintf(stderr, "Applying %d - %s %s\n", i, node->name, xpath);
 				xmlElemDump(stderr, patch_doc, node);
+				
+				if (xpath != empty) {
+					xmlFree(xpath);
+				}
 			}
 			int sub_rc = xmldoc_change(doc, node);
 			if (sub_rc) {
