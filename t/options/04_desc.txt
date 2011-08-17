@@ -1,0 +1,3 @@
+Output redirection using "-o" option
+
+All results can be redirected into one file using "-o" option.

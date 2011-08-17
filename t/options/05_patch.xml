@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<changes>
+	<change file="test.xml">
+		<remove sel="//inner[@name='first']"/>
+	</change>
+</changes>

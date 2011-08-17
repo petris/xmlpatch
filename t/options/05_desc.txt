@@ -1,0 +1,4 @@
+Input redirection using "-i" option
+
+If the option "-i" is specified, the intput is read from the specified file
+instead of standard input.
