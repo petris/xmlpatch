@@ -2,4 +2,4 @@ Default run
 
 If no options are specified, the patch is read from standard input and files 
 specified in the patch itself are used. All directory components of their path
-is stripped.
+are stripped.

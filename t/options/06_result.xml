@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<root>
+	<outer>
+		<inner name="first">
+			${} $ $ $1 
+		</inner>
+		<inner name="second"/>
+		<inner name="third"/>
+	</outer>
+</root>

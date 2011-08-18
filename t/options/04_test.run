@@ -1,13 +1,15 @@
 #!/bin/sh
 set -e
 
-[ -f out.xml ] && rm out.xml
+for file in out.xml test1.xml test2.xml; do
+	[ -f $file ] && rm $file
+done
 cp orig.xml test1.xml
 cp orig.xml test2.xml
 $XMLPATCH -s -o out.xml < 04_patch.xml
 
-diff out.xml 04_result.xml > /dev/null || exit 1
-diff orig.xml test1.xml > /dev/null && exit 1
-diff orig.xml test2.xml > /dev/null && exit 1
-[ -f test1.xml.rej ] && exit 1
-[ -f test2.xml.rej ] && exit 1
+diff out.xml 04_result.xml > /dev/null
+diff orig.xml test1.xml    > /dev/null
+diff orig.xml test2.xml    > /dev/null
+[ ! -f test1.xml.rej ]
+[ ! -f test2.xml.rej ]

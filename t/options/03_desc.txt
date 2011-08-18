@@ -1,3 +1,3 @@
-Run with -p0
+Run with -p2
 
-If -p0 is specified, the whole path shall be used as the patched file location.
+If -p2 is specified, the first two components of the path shall be stripped.

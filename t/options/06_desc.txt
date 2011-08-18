@@ -1,0 +1,4 @@
+Variable expansion using "-x" option
+
+If the "-x" option is specified, variables in the form of $IDENTIFIER or
+${INDENTIFIER} are substituted with their value. $$ is substituted with one $.

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<changes>
+	<${CHAN}ge $ATTR
+		<$NODE sel="//inner[@name='first']">
+			${} $ $$ $1 $NOT_EXIST
+		</$NODE>
+	</change>
+</changes>

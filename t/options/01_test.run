@@ -5,5 +5,5 @@ set -e
 cp orig.xml test.xml
 $XMLPATCH -s < 01_patch.xml
 
-diff test.xml 01_result.xml > /dev/null || exit 1
+diff test.xml 01_result.xml > /dev/null
 [ ! -f test.xml.rej ]

@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+[ -f test.xml.rej ] && rm test.xml.rej
+cp orig.xml test.xml
+export NODE=add
+export CHAN=chan
+export ATTR='file="test.xml">'
+$XMLPATCH -s -x < 06_patch.xml
+
+diff test.xml 06_result.xml > /dev/null
+[ ! -f test.xml.rej ] 
