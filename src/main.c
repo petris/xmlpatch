@@ -208,40 +208,48 @@ static void file_backup(char *filename)
 /** Parse identifier and return its value */
 static char *get_var(char *data, unsigned size, unsigned *used)
 {
-	static char value[3];
+	unsigned pos = 0;
+	bool carret = false;
 
 	if (size < 3) {
 		*used = size;
 		return NULL;
 	}
 
-	assert(data[0] == '$');
+	assert(data[pos] == '$');
+	pos++;
 
-	if (data[1] == '$') {
-		value[0] = '$';
-		value[1] = 0;
+	if (data[pos] == '$') {
 		*used = 2;
-		return value;
+		return "$";
 	}
 
-	if (!(isalpha(data[1]) || data[1] == '_')) { // Not a identifier
-		value[0] = '$';
-		value[1] = data[1];
-		value[2] = 0;
-		*used = 2;
-		return value;
+	if (data[pos] == '{') {
+		carret = true;
+		pos++;
 	}
 
-	for (unsigned i = 1; i < size - 1; i++) {
+	if (!(isalpha(data[pos]) || data[pos] == '_')) { // Not a identifier
+		*used = 1;
+		return "$";
+	}
+
+	for (unsigned i = pos; i < size - 1; i++) {
 		if (!(isalnum(data[i]) || data[i] == '_')) { // Identifier found
 			char *env_val;
 			int c;
 
+			if (carret && data[i] != '}') {
+				*used = 1;
+				return "$";
+			}
+
 			c = data[i];
 			data[i] = 0;
-			env_val = getenv(data + 1);
+			env_val = getenv(data + pos);
 			data[i] = c;
-			*used = i;
+
+			*used = carret ? i + 1 : i;
 			if (env_val) {
 				return env_val;
 			} else {

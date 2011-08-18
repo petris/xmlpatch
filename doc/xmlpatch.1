@@ -141,7 +141,13 @@ version and exit.
 \fB\-x\fP  or  \fB\-\-expand\fP
 Expand environment variables found in patch file before doing anything else.
 Variable identificators can be specified as
-.BR $VARIABLE_NAME .
+.BR $VARIABLE_NAME 
+or 
+.BR ${VARIABLE_NAME} .
+Use 
+.BR $$ 
+to obtain single
+.BR $ .
 .TP
 \fB\-Y\fP \fIpref\fP  or  \fB\-\-basename\-prefix=\fP\fIpref\fP
 Prefix
